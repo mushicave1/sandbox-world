@@ -1,0 +1,16 @@
+name: Zig CI - Run Tests
+
+on:
+  push:
+    branches:
+      - '*' 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Simple Log
+      run: |
+          echo "Soon, tests will be ran here and will be required to PASS." 
+          exit 1
