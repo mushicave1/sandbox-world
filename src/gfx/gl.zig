@@ -106,7 +106,7 @@ pub const GLProgram = struct {
 
     pub fn setUniform(self: @This(), comptime T: type, name: []const u8, args: *T) void {
         switch(T) {
-            f32 => c.glUniformMatrix4fv(c.glGetUniformLocation(self.handle, name.ptr), 1, c.GLFW_TRUE, args),
+            f32 => c.glUniformMatrix4fv(c.glGetUniformLocation(self.handle, name.ptr), 1, c.GLFW_FALSE, args),
             else => {}
         }
     }

@@ -1,6 +1,8 @@
 const std = @import("std");
-const writer = std.io.getStdOut().writer();
 const gl = @import("gfx/gl.zig");
+const math = @import("math/math.zig");
+
+const writer = std.io.getStdOut().writer();
 
 const c = @cImport({
 	@cInclude("epoxy/gl.h");
@@ -91,6 +93,13 @@ pub fn main() !void {
 	var position = [2]f32{0.0, 0.0};
 	var size = [2]f32{1.0, 1.0};
 
+	var model = math.mat4x4(
+		&math.vec4(1.0, 0.0, 0.0, 0.0),
+		&math.vec4(0.0, 1.0, 0.0, 0.0),
+		&math.vec4(0.0, 0.0, 1.0, 0.0),
+		&math.vec4(0.0, 0.0, 0.0, 1.0),
+	);
+
 	while(c.glfwWindowShouldClose(window) == c.GLFW_FALSE) {
 		c.glfwPollEvents();
 		c.glClear(c.GL_COLOR_BUFFER_BIT);
@@ -130,15 +139,12 @@ pub fn main() !void {
 		size[0] += 0.01;
 		}
 
-		var model_matrix = [4][4]f32{
-			[4]f32{size[0], 0.0, 0.0, position[0]},
-			[4]f32{0.0, size[1], 0.0, position[1]},
-			[4]f32{0.0, 0.0, 1.0, 0.0},
-			[4]f32{0.0, 0.0, 0.0, 1.0}
-		};
-
+		const translate = math.Mat4x4.translate(math.vec3(position[0], position[1], 0.0));
+		const scale = math.Mat4x4.scale(math.vec3(size[0], size[1], 0.0));
+		model = math.Mat4x4.mul(&translate, &scale);
+		
 		program.bind();
-		program.setUniform(f32, "u_model", &model_matrix[0][0]);
+		program.setUniform(f32, "u_model", &model.v[0].v[0]);
 		vertex_input.bind();
 
 		c.glDrawElements(c.GL_TRIANGLES, 6, c.GL_UNSIGNED_BYTE, null);
