@@ -13,4 +13,4 @@ jobs:
     - name: Simple Log
       run: |
           echo "Soon, tests will be ran here and will be required to PASS." 
-          exit 1
+          exit 0
