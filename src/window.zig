@@ -32,8 +32,8 @@ pub const Window = struct {
     }  
 
     pub fn deinit(self: @This()) void {
-        defer c.glfwTerminate();
-        defer c.glfwDestroyWindow(self.native_window);
+        c.glfwTerminate();
+        c.glfwDestroyWindow(self.native_window);
     }
 
     pub fn isRunning(self: @This()) bool {
@@ -59,7 +59,7 @@ fn keyCallback(window: ?*c.GLFWwindow, key: c_int, _: c_int, action: c_int, _: c
 	if(action == c.GLFW_PRESS) {
 		switch(key) {
 		    c.GLFW_KEY_ESCAPE => c.glfwSetWindowShouldClose(window, c.GL_TRUE),
-		    else => unreachable
+		    else => {}
 		}
 	} 
 }

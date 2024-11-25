@@ -3,42 +3,26 @@ const gl = @import("gfx/gl.zig");
 const math = @import("math/math.zig");
 const c = @import("c.zig").c;
 const w = @import("window.zig");
+const file = @import("file.zig");
 
 const writer = std.io.getStdOut().writer();
 
 pub fn main() !void {
 	var window = try w.Window.init(600, 400, "Window");
 
+	defer window.deinit();
+
 	// Renderer
 	// ---------------------------
-	c.glViewport(0, 0, 600 * @as(c_int, @intCast(window.pixel_width)), 400 * @as(c_int, @intCast(window.pixel_height)));
+	c.glViewport(0, 0, @as(c_int, @intCast(window.pixel_width)), @as(c_int, @intCast(window.pixel_height)));
 
 	// Shader Program
 	// ----------------------------
-	const vertex_shader_source = 
-		\\ #version 330 core
-		\\ layout (location = 0) in vec3 aPos;
-		\\
-		\\out vec3 v_vertex_position;
-		\\
-		\\uniform mat4 u_model;
-		\\
-		\\ void main() {
-		\\     v_vertex_position = aPos;
-		\\     gl_Position = u_model * vec4(aPos, 1.0);
-		\\}
-	;
+	const vertex_shader_source = try file.readFile("assets/shaders/basic.vert");
+	defer std.heap.page_allocator.free(vertex_shader_source);
 
-	const fragment_shader_source = 
-		\\ #version 330 core
-		\\ layout (location = 0) out vec4 frag_pos;
-		\\
-		\\ in vec3 v_vertex_position;
-		\\
-		\\ void main() {
-		\\     frag_pos = vec4(v_vertex_position, 1.0);
-		\\}
-		;
+	const fragment_shader_source = try file.readFile("assets/shaders/basic.frag");
+	defer std.heap.page_allocator.free(fragment_shader_source);
 
 	const program = try gl.GLProgram.init(vertex_shader_source, fragment_shader_source);
 	defer program.deinit();
