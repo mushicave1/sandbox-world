@@ -9,9 +9,8 @@ const writer = std.io.getStdOut().writer();
 
 pub fn main() !void {
 	var window = try w.Window.init(600, 400, "Window");
-	defer window.deinit();
 
-	std.debug.print("{any}\n\n {any}", .{window.pixel_width, window.pixel_height});
+	defer window.deinit();
 
 	// Renderer
 	// ---------------------------
