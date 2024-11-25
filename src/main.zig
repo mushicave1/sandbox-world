@@ -14,7 +14,7 @@ pub fn main() !void {
 
 	// Renderer
 	// ---------------------------
-	c.glViewport(0, 0, 600 * @as(c_int, @intCast(window.pixel_width)), 400 * @as(c_int, @intCast(window.pixel_height)));
+	c.glViewport(0, 0, @as(c_int, @intCast(window.pixel_width)), @as(c_int, @intCast(window.pixel_height)));
 
 	// Shader Program
 	// ----------------------------
